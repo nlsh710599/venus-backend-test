@@ -9,4 +9,10 @@ const router = Router();
  */
 router.get('/tvl', marketController.getTvl);
 
+/**
+ * GET /liquidity
+ * Route to fetch the aggregated Liquidity (Supply - Borrow).
+ */
+router.get('/liquidity', marketController.getLiquidity);
+
 export default router;

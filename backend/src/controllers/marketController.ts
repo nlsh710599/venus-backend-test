@@ -39,4 +39,37 @@ export const marketController = {
         .json({ error: 'Internal Server Error' });
     }
   },
+
+  /**
+   * GET /liquidity
+   * Retrieves the aggregated Liquidity (Supply - Borrow).
+   */
+  getLiquidity: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { chain_id } = req.query;
+
+      // Input Validation
+      if (chain_id) {
+        if (!SUPPORTED_CHAINS.includes(String(chain_id))) {
+          res.status(HttpStatusCode.BAD_REQUEST).json({
+            error: `Invalid chain_id. Allowed values: ${SUPPORTED_CHAINS.join(', ')}`,
+          });
+          return;
+        }
+      }
+
+      // Call Service Layer
+      const marketLiquidity = await marketService.getLiquidity(
+        chain_id as string,
+      );
+
+      // Send JSON Response
+      res.status(HttpStatusCode.OK).json({ marketLiquidity });
+    } catch (error) {
+      console.error('Error in marketController.getLiquidity:', error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal Server Error' });
+    }
+  },
 };

@@ -14,4 +14,24 @@ export const marketService = {
   getTvl: async (chainId?: string): Promise<string> => {
     return await marketRepository.getTvl(chainId);
   },
+
+  /**
+   * Calculates the Liquidity (Total Supply - Total Borrow).
+   * Performs BigInt arithmetic to ensure precision with financial data.
+   * @param chainId - Optional chain ID filter.
+   * @returns The liquidity amount as a string.
+   */
+  getLiquidity: async (chainId?: string): Promise<string> => {
+    // 1. Fetch raw metrics (supply and borrow) from repository
+    const metrics = await marketRepository.getMetrics(chainId);
+
+    // 2. Perform calculation using BigInt for safety
+    // Note: The repository guarantees these values are strings (default '0')
+    const supply = BigInt(metrics.totalSupply);
+    const borrow = BigInt(metrics.totalBorrow);
+
+    // 3. Liquidity = Supply - Borrow
+    // Convert back to string to preserve precision
+    return (supply - borrow).toString();
+  },
 };
