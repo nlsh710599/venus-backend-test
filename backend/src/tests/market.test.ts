@@ -2,6 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import marketRoutes from '../routes/marketRoutes';
 import { marketRepository } from '../repositories/marketRepository';
+import { HttpStatusCode } from '../constants/httpStatus';
 
 jest.mock('../config/env', () => ({
   config: {
@@ -41,7 +42,7 @@ describe('GET /tvl', () => {
     const res = await request(app).get('/tvl');
 
     // Assert: Verify the response status and body
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(HttpStatusCode.OK);
     expect(res.body).toEqual({ marketTvl: '1000' });
 
     // Verify that the repository was called with 'undefined' (no filter)
@@ -56,7 +57,7 @@ describe('GET /tvl', () => {
     const res = await request(app).get('/tvl?chain_id=56');
 
     // Assert: Verify the response matches the mocked value
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(HttpStatusCode.OK);
     expect(res.body).toEqual({ marketTvl: '500' });
 
     // Verify that the repository received the correct chain ID
@@ -68,7 +69,7 @@ describe('GET /tvl', () => {
     const res = await request(app).get('/tvl?chain_id=999');
 
     // Assert: Verify the 400 status and error message
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(HttpStatusCode.BAD_REQUEST);
     expect(res.body).toHaveProperty('error');
 
     // Verify that the repository was NEVER called (blocked by controller validation)
@@ -85,7 +86,7 @@ describe('GET /tvl', () => {
     const res = await request(app).get('/tvl');
 
     // Assert: Verify the 500 status code
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(HttpStatusCode.INTERNAL_SERVER_ERROR);
     expect(res.body).toEqual({ error: 'Internal Server Error' });
   });
 });

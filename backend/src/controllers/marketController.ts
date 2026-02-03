@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { marketService } from '../services/marketService';
-import { SUPPORTED_CHAINS } from '../constants/chains'; // <--- Import constants
+import { HttpStatusCode } from '../constants/httpStatus';
+import { SUPPORTED_CHAINS } from '../constants/chains';
 
 /**
  * Controller: Handles HTTP requests for Market endpoints.
@@ -19,7 +20,7 @@ export const marketController = {
       if (chain_id) {
         // Use the centralized constant for validation
         if (!SUPPORTED_CHAINS.includes(String(chain_id))) {
-          res.status(400).json({
+          res.status(HttpStatusCode.BAD_REQUEST).json({
             error: `Invalid chain_id. Allowed values: ${SUPPORTED_CHAINS.join(', ')}`,
           });
           return;
@@ -33,7 +34,9 @@ export const marketController = {
       res.json({ marketTvl });
     } catch (error) {
       console.error('Error in marketController.getTvl:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal Server Error' });
     }
   },
 };

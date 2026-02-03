@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Mount Routes
-// All market-related routes will be prefixed with / (or you could use /api)
+// All market-related routes will be prefixed with / (or use /api)
 app.use('/', marketRoutes);
 
 /**
