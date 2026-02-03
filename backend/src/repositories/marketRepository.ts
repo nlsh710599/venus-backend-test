@@ -22,7 +22,7 @@ export const marketRepository = {
    * @returns A promise that resolves to the total TVL as a string.
    */
   getTvl: async (chainId?: string, assetName?: string): Promise<string> => {
-    let query = 'SELECT SUM(total_supply_cents) as totalTvl FROM market';
+    let query = 'SELECT SUM(total_supply_cents) as marketTvl FROM market';
     const params: string[] = [];
     const conditions: string[] = [];
 
@@ -44,7 +44,7 @@ export const marketRepository = {
     const [rows] = await pool.query<TvlResult[]>(query, params);
 
     // Process the result: ensure a string is returned even if the result is null
-    return rows[0]?.totalTvl ?? '0';
+    return rows[0]?.marketTvl ?? '0';
   },
 
   /**
