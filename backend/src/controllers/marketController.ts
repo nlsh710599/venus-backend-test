@@ -18,17 +18,6 @@ export const marketController = {
       // Extract query parameters
       const { chain_id, asset } = req.query;
 
-      // Input Validation
-      if (chain_id) {
-        // Use the centralized constant for validation
-        if (!SUPPORTED_CHAINS.includes(String(chain_id))) {
-          res.status(HttpStatusCode.BAD_REQUEST).json({
-            error: `Invalid chain_id. Allowed values: ${SUPPORTED_CHAINS.join(', ')}`,
-          });
-          return;
-        }
-      }
-
       // Call Service Layer with both filters
       const marketTvl = await marketService.getTvl(
         chain_id as string,
@@ -54,16 +43,6 @@ export const marketController = {
     try {
       // Extract query parameters
       const { chain_id, asset } = req.query;
-
-      // Input Validation
-      if (chain_id) {
-        if (!SUPPORTED_CHAINS.includes(String(chain_id))) {
-          res.status(HttpStatusCode.BAD_REQUEST).json({
-            error: `Invalid chain_id. Allowed values: ${SUPPORTED_CHAINS.join(', ')}`,
-          });
-          return;
-        }
-      }
 
       // Call Service Layer with both filters
       const marketLiquidity = await marketService.getLiquidity(
