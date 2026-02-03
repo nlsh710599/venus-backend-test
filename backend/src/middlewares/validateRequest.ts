@@ -26,3 +26,17 @@ export const validateChainId = (
   // Continue to the controller
   next();
 };
+
+export const ensureSingleQuery = (keys: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    keys.forEach((key) => {
+      const value = req.query[key];
+
+      if (value && Array.isArray(value)) {
+        req.query[key] = value[0] as any;
+      }
+    });
+
+    next();
+  };
+};
