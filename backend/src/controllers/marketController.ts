@@ -10,17 +10,17 @@ export const marketController = {
    * GET /tvl
    * Retrieves the Total Value Locked.
    * Validates the request parameters before calling the service.
-   * Supports filtering by 'chain_id' and 'asset'.
+   * Supports filtering by 'chain_id' and 'name'.
    */
   getTvl: async (req: Request, res: Response): Promise<void> => {
     try {
       // Extract query parameters
-      const { chain_id, asset } = req.query;
+      const { chain_id, name } = req.query;
 
       // Call Service Layer with both filters
       const marketTvl = await marketService.getTvl(
         chain_id as string,
-        asset as string,
+        name as string,
       );
 
       // Send JSON Response
@@ -36,17 +36,17 @@ export const marketController = {
   /**
    * GET /liquidity
    * Retrieves the aggregated Liquidity (Supply - Borrow).
-   * Supports filtering by 'chain_id' and 'asset'.
+   * Supports filtering by 'chain_id' and 'name'.
    */
   getLiquidity: async (req: Request, res: Response): Promise<void> => {
     try {
       // Extract query parameters
-      const { chain_id, asset } = req.query;
+      const { chain_id, name } = req.query;
 
       // Call Service Layer with both filters
       const marketLiquidity = await marketService.getLiquidity(
         chain_id as string,
-        asset as string,
+        name as string,
       );
 
       // Send JSON Response

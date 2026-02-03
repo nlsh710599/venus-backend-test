@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-const normalizeMarketParams = ensureSingleQuery(['chain_id', 'asset']);
+const normalizeMarketParams = ensureSingleQuery(['chain_id', 'name']);
 
 /**
  * GET /tvl

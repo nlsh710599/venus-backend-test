@@ -9,26 +9,23 @@ export const marketService = {
    * Gets the Total Value Locked (TVL).
    * Future business logic (e.g., calculation, aggregation) can be added here.
    * @param chainId - Optional chain ID filter.
-   * @param assetName - Optional asset name filter.
+   * @param name - Optional name filter.
    * @returns The TVL as a string.
    */
-  getTvl: async (chainId?: string, assetName?: string): Promise<string> => {
-    return await marketRepository.getTvl(chainId, assetName);
+  getTvl: async (chainId?: string, name?: string): Promise<string> => {
+    return await marketRepository.getTvl(chainId, name);
   },
 
   /**
    * Calculates the Liquidity (Total Supply - Total Borrow).
    * Performs BigInt arithmetic to ensure precision with financial data.
    * @param chainId - Optional chain ID filter.
-   * @param assetName - Optional asset name filter.
+   * @param name - Optional name filter.
    * @returns The liquidity amount as a string.
    */
-  getLiquidity: async (
-    chainId?: string,
-    assetName?: string,
-  ): Promise<string> => {
+  getLiquidity: async (chainId?: string, name?: string): Promise<string> => {
     // 1. Fetch raw metrics (supply and borrow) from repository
-    const metrics = await marketRepository.getMetrics(chainId, assetName);
+    const metrics = await marketRepository.getMetrics(chainId, name);
 
     // 2. Perform calculation using BigInt for safety
     // Note: The repository guarantees these values are strings (default '0')

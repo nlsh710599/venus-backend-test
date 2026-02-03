@@ -18,10 +18,10 @@ export const marketRepository = {
   /**
    * Retrieves the Total Value Locked (TVL) from the market table.
    * @param chainId - Optional chain ID to filter the results.
-   * @param assetName - Optional asset name to filter the results.
+   * @param name - Optional name to filter the results.
    * @returns A promise that resolves to the total TVL as a string.
    */
-  getTvl: async (chainId?: string, assetName?: string): Promise<string> => {
+  getTvl: async (chainId?: string, name?: string): Promise<string> => {
     let query = 'SELECT SUM(total_supply_cents) as marketTvl FROM market';
     const params: string[] = [];
     const conditions: string[] = [];
@@ -31,9 +31,9 @@ export const marketRepository = {
       conditions.push('chain_id = ?');
       params.push(chainId);
     }
-    if (assetName) {
+    if (name) {
       conditions.push('name = ?');
-      params.push(assetName);
+      params.push(name);
     }
 
     if (conditions.length > 0) {
@@ -51,12 +51,12 @@ export const marketRepository = {
    * Retrieves both Total Supply and Total Borrow aggregated values.
    * This allows the service layer to calculate Liquidity (Supply - Borrow).
    * @param chainId - Optional chain ID to filter by.
-   * @param assetName - Optional asset name to filter the results.
+   * @param name - Optional name to filter the results.
    * @returns An object containing totalSupply and totalBorrow strings.
    */
   getMetrics: async (
     chainId?: string,
-    assetName?: string,
+    name?: string,
   ): Promise<MarketMetrics> => {
     let query = `
       SELECT 
@@ -72,9 +72,9 @@ export const marketRepository = {
       conditions.push('chain_id = ?');
       params.push(chainId);
     }
-    if (assetName) {
+    if (name) {
       conditions.push('name = ?');
-      params.push(assetName);
+      params.push(name);
     }
 
     if (conditions.length > 0) {
