@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { marketService } from '../services/marketService';
 import { HttpStatusCode } from '../constants/httpStatus';
-import { SUPPORTED_CHAINS } from '../constants/chains';
 
 /**
  * Controller: Handles HTTP requests for Market endpoints.
