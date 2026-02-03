@@ -1,9 +1,11 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import { config } from './config/env';
 import pool from './config/db';
 import marketRoutes from './routes/marketRoutes';
 import { HttpStatusCode } from './constants/httpStatus';
+import { generateOpenApiDocument } from './utils/swagger';
 
 const app: Express = express();
 
@@ -11,8 +13,17 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json());
 
+const swaggerDocument = generateOpenApiDocument();
+
+// Swagger Route
+app.use(
+  '/api-docs',
+  swaggerUi.serve as any,
+  swaggerUi.setup(swaggerDocument) as any,
+);
+
 // Mount Routes
-// All market-related routes will be prefixed with / (or use /api)
+// All market-related routes will be prefixed with /market
 app.use('/market', marketRoutes);
 
 /**
