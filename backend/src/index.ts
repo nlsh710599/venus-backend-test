@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Mount Routes
 // All market-related routes will be prefixed with / (or use /api)
-app.use('/', marketRoutes);
+app.use('/market', marketRoutes);
 
 /**
  * Health Check / Root Endpoint

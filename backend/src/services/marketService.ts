@@ -12,8 +12,12 @@ export const marketService = {
    * @param name - Optional name filter.
    * @returns The TVL as a string.
    */
-  getTvl: async (chainId?: string, name?: string): Promise<string> => {
-    return await marketRepository.getTvl(chainId, name);
+  getTvl: async (
+    chainId?: string,
+    name?: string,
+    id?: string,
+  ): Promise<string> => {
+    return await marketRepository.getTvl(chainId, name, id);
   },
 
   /**
@@ -23,9 +27,13 @@ export const marketService = {
    * @param name - Optional name filter.
    * @returns The liquidity amount as a string.
    */
-  getLiquidity: async (chainId?: string, name?: string): Promise<string> => {
+  getLiquidity: async (
+    chainId?: string,
+    name?: string,
+    id?: string,
+  ): Promise<string> => {
     // 1. Fetch raw metrics (supply and borrow) from repository
-    const metrics = await marketRepository.getMetrics(chainId, name);
+    const metrics = await marketRepository.getMetrics(chainId, name, id);
 
     // 2. Perform calculation using BigInt for safety
     // Note: The repository guarantees these values are strings (default '0')

@@ -31,4 +31,16 @@ router.get(
   marketController.getLiquidity,
 );
 
+/**
+ * GET /:id/tvl
+ * Route to fetch the Total Value Locked by id.
+ */
+router.get('/:id/tvl', marketController.getTvlById);
+
+/**
+ * GET /:id/liquidity
+ * Route to fetch the aggregated Liquidity (Supply - Borrow) by id.
+ */
+router.get('/:id/liquidity', marketController.getLiquidityById);
+
 export default router;

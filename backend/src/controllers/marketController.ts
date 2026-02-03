@@ -58,4 +58,46 @@ export const marketController = {
         .json({ error: 'Internal Server Error' });
     }
   },
+
+  /**
+   * GET /:id/tvl
+   * Retrieves TVL for a specific market ID.
+   */
+  getTvlById: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      const marketTvl = await marketService.getTvl(undefined, undefined, id);
+
+      res.status(HttpStatusCode.OK).json({ marketTvl });
+    } catch (error) {
+      console.error('Error in marketController.getTvlById:', error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal Server Error' });
+    }
+  },
+
+  /**
+   * GET /:id/liquidity
+   * Retrieves Liquidity for a specific market ID.
+   */
+  getLiquidityById: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      const marketLiquidity = await marketService.getLiquidity(
+        undefined,
+        undefined,
+        id,
+      );
+
+      res.status(HttpStatusCode.OK).json({ marketLiquidity });
+    } catch (error) {
+      console.error('Error in marketController.getLiquidityById:', error);
+      res
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal Server Error' });
+    }
+  },
 };
