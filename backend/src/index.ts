@@ -3,6 +3,7 @@ import cors from 'cors';
 import { config } from './config/env';
 import pool from './config/db';
 import marketRoutes from './routes/marketRoutes';
+import { HttpStatusCode } from './constants/httpStatus';
 
 const app: Express = express();
 
@@ -24,7 +25,9 @@ app.get('/', async (req: Request, res: Response) => {
     connection.release();
     res.json({ response: 'Database connection established successfully' });
   } catch (error) {
-    res.json({ response: `Error connecting to database: ${error}` });
+    res
+      .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+      .json({ response: `Error connecting to database: ${error}` });
   }
 });
 
