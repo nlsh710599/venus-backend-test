@@ -3,6 +3,7 @@ import {
   extendZodWithOpenApi,
   OpenAPIRegistry,
 } from '@asteasolutions/zod-to-openapi';
+import { SUPPORTED_CHAINS } from '../constants/chains';
 
 // 1. Enable OpenAPI extension
 extendZodWithOpenApi(z);
@@ -40,6 +41,7 @@ registry.register('Error', ErrorSchema);
 // Export TypeScript types for Controller
 export type TvlResponse = z.infer<typeof TvlResponseSchema>;
 export type LiquidityResponse = z.infer<typeof LiquidityResponseSchema>;
+export type ErrorResponse = z.infer<typeof ErrorSchema>;
 
 // ==========================================
 // Parameters
@@ -48,7 +50,7 @@ export type LiquidityResponse = z.infer<typeof LiquidityResponseSchema>;
 // Query Parameters (for list queries)
 const CommonQueryParams = z.object({
   chain_id: z
-    .enum(['1', '56'])
+    .enum(SUPPORTED_CHAINS)
     .optional()
     .openapi({ description: 'Filter by Chain ID (Ethereum=1, BSC=56)' }),
   name: z.string().optional().openapi({ description: 'Filter by Token Name' }),
@@ -58,6 +60,9 @@ const CommonQueryParams = z.object({
 const IdPathParam = z.object({
   id: z.string().openapi({ description: 'The market ID', example: '1' }),
 });
+
+export type MarketQueryParams = z.infer<typeof CommonQueryParams>;
+export type MarketIdParams = z.infer<typeof IdPathParam>;
 
 // ==========================================
 // Routes

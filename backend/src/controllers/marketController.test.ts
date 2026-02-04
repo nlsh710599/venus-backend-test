@@ -3,6 +3,14 @@ import { marketService } from '../services/marketService';
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../constants/httpStatus';
 
+import {
+  MarketIdParams,
+  MarketQueryParams,
+  TvlResponse,
+  LiquidityResponse,
+  ErrorResponse,
+} from '../schemas/market.schema';
+
 jest.mock('../config/db', () => ({
   __esModule: true,
   default: {
@@ -32,8 +40,13 @@ describe('marketController', () => {
       (marketService.getTvl as jest.Mock).mockResolvedValue('1000');
 
       await marketController.getTvl(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          {},
+          TvlResponse | ErrorResponse,
+          {},
+          MarketQueryParams
+        >,
+        mockResponse as Response<TvlResponse | ErrorResponse>,
       );
 
       expect(marketService.getTvl).toHaveBeenCalledWith('1', 'Token');
@@ -47,8 +60,13 @@ describe('marketController', () => {
       );
 
       await marketController.getTvl(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          {},
+          TvlResponse | ErrorResponse,
+          {},
+          MarketQueryParams
+        >,
+        mockResponse as Response<TvlResponse | ErrorResponse>,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(
@@ -66,8 +84,13 @@ describe('marketController', () => {
       (marketService.getLiquidity as jest.Mock).mockResolvedValue('500');
 
       await marketController.getLiquidity(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          {},
+          LiquidityResponse | ErrorResponse,
+          {},
+          MarketQueryParams
+        >,
+        mockResponse as Response<LiquidityResponse | ErrorResponse>,
       );
 
       expect(marketService.getLiquidity).toHaveBeenCalledWith('56', undefined);
@@ -83,8 +106,13 @@ describe('marketController', () => {
       );
 
       await marketController.getLiquidity(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          {},
+          LiquidityResponse | ErrorResponse,
+          {},
+          MarketQueryParams
+        >,
+        mockResponse as Response<LiquidityResponse | ErrorResponse>,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(
@@ -99,8 +127,13 @@ describe('marketController', () => {
       (marketService.getTvl as jest.Mock).mockResolvedValue('5000');
 
       await marketController.getTvlById(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          MarketIdParams,
+          TvlResponse | ErrorResponse,
+          {},
+          {}
+        >,
+        mockResponse as Response<TvlResponse | ErrorResponse>,
       );
 
       expect(marketService.getTvl).toHaveBeenCalledWith(
@@ -119,8 +152,13 @@ describe('marketController', () => {
       );
 
       await marketController.getTvlById(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          MarketIdParams,
+          TvlResponse | ErrorResponse,
+          {},
+          {}
+        >,
+        mockResponse as Response<TvlResponse | ErrorResponse>,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(
@@ -138,8 +176,13 @@ describe('marketController', () => {
       );
 
       await marketController.getTvlById(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          MarketIdParams,
+          TvlResponse | ErrorResponse,
+          {},
+          {}
+        >,
+        mockResponse as Response<TvlResponse | ErrorResponse>,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(
@@ -154,8 +197,13 @@ describe('marketController', () => {
       (marketService.getLiquidity as jest.Mock).mockResolvedValue('2500');
 
       await marketController.getLiquidityById(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          MarketIdParams,
+          LiquidityResponse | ErrorResponse,
+          {},
+          {}
+        >,
+        mockResponse as Response<LiquidityResponse | ErrorResponse>,
       );
 
       expect(marketService.getLiquidity).toHaveBeenCalledWith(
@@ -176,8 +224,13 @@ describe('marketController', () => {
       );
 
       await marketController.getLiquidityById(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          MarketIdParams,
+          LiquidityResponse | ErrorResponse,
+          {},
+          {}
+        >,
+        mockResponse as Response<LiquidityResponse | ErrorResponse>,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(
@@ -195,8 +248,13 @@ describe('marketController', () => {
       );
 
       await marketController.getLiquidityById(
-        mockRequest as Request,
-        mockResponse as Response,
+        mockRequest as Request<
+          MarketIdParams,
+          LiquidityResponse | ErrorResponse,
+          {},
+          {}
+        >,
+        mockResponse as Response<LiquidityResponse | ErrorResponse>,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(

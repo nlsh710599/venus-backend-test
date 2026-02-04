@@ -1,4 +1,5 @@
 import { marketRepository } from '../repositories/marketRepository';
+import { MarketQueryParams } from '../schemas/market.schema';
 
 /**
  * Service: Handles business logic for Market operations.
@@ -13,8 +14,8 @@ export const marketService = {
    * @returns The TVL as a string.
    */
   getTvl: async (
-    chainId?: string,
-    name?: string,
+    chainId?: MarketQueryParams['chain_id'],
+    name?: MarketQueryParams['name'],
     id?: string,
   ): Promise<string> => {
     const result = await marketRepository.getTvl(chainId, name, id);
@@ -37,8 +38,8 @@ export const marketService = {
    * @returns The liquidity amount as a string.
    */
   getLiquidity: async (
-    chainId?: string,
-    name?: string,
+    chainId?: MarketQueryParams['chain_id'],
+    name?: MarketQueryParams['name'],
     id?: string,
   ): Promise<string> => {
     // 1. Fetch raw metrics (supply and borrow) from repository

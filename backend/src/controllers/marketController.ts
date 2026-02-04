@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import { marketService } from '../services/marketService';
 import { HttpStatusCode } from '../constants/httpStatus';
+import {
+  TvlResponse,
+  LiquidityResponse,
+  ErrorResponse,
+  MarketQueryParams,
+  MarketIdParams,
+} from '../schemas/market.schema';
 
 /**
  * Controller: Handles HTTP requests for Market endpoints.
@@ -12,7 +19,10 @@ export const marketController = {
    * Validates the request parameters before calling the service.
    * Supports filtering by 'chain_id' and 'name'.
    */
-  getTvl: async (req: Request, res: Response): Promise<void> => {
+  getTvl: async (
+    req: Request<{}, TvlResponse | ErrorResponse, {}, MarketQueryParams>,
+    res: Response<TvlResponse | ErrorResponse>,
+  ): Promise<void> => {
     try {
       // Extract query parameters
       const { chain_id, name } = req.query;
@@ -38,7 +48,10 @@ export const marketController = {
    * Retrieves the aggregated Liquidity (Supply - Borrow).
    * Supports filtering by 'chain_id' and 'name'.
    */
-  getLiquidity: async (req: Request, res: Response): Promise<void> => {
+  getLiquidity: async (
+    req: Request<{}, LiquidityResponse | ErrorResponse, {}, MarketQueryParams>,
+    res: Response<LiquidityResponse | ErrorResponse>,
+  ): Promise<void> => {
     try {
       // Extract query parameters
       const { chain_id, name } = req.query;
@@ -63,7 +76,10 @@ export const marketController = {
    * GET /:id/tvl
    * Retrieves TVL for a specific market ID.
    */
-  getTvlById: async (req: Request, res: Response): Promise<void> => {
+  getTvlById: async (
+    req: Request<MarketIdParams, TvlResponse | ErrorResponse, {}, {}>,
+    res: Response<TvlResponse | ErrorResponse>,
+  ): Promise<void> => {
     try {
       const { id } = req.params;
 
@@ -89,7 +105,10 @@ export const marketController = {
    * GET /:id/liquidity
    * Retrieves Liquidity for a specific market ID.
    */
-  getLiquidityById: async (req: Request, res: Response): Promise<void> => {
+  getLiquidityById: async (
+    req: Request<MarketIdParams, LiquidityResponse | ErrorResponse, {}, {}>,
+    res: Response<LiquidityResponse | ErrorResponse>,
+  ): Promise<void> => {
     try {
       const { id } = req.params;
 
