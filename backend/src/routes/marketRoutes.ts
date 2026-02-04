@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-const normalizeMarketParams = ensureSingleQuery(['chain_id', 'name']);
+const normalizeMarketParams = ensureSingleQuery(['chain_id', 'name', 'id']);
 
 /**
  * GET /tvl
@@ -35,12 +35,16 @@ router.get(
  * GET /:id/tvl
  * Route to fetch the Total Value Locked by id.
  */
-router.get('/:id/tvl', marketController.getTvlById);
+router.get('/:id/tvl', normalizeMarketParams, marketController.getTvlById);
 
 /**
  * GET /:id/liquidity
  * Route to fetch the aggregated Liquidity (Supply - Borrow) by id.
  */
-router.get('/:id/liquidity', marketController.getLiquidityById);
+router.get(
+  '/:id/liquidity',
+  normalizeMarketParams,
+  marketController.getLiquidityById,
+);
 
 export default router;
