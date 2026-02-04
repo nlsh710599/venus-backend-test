@@ -70,7 +70,14 @@ export const marketController = {
       const marketTvl = await marketService.getTvl(undefined, undefined, id);
 
       res.status(HttpStatusCode.OK).json({ marketTvl });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === 'Market not found') {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ error: 'Market ID not found' });
+        return;
+      }
+
       console.error('Error in marketController.getTvlById:', error);
       res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
@@ -93,7 +100,14 @@ export const marketController = {
       );
 
       res.status(HttpStatusCode.OK).json({ marketLiquidity });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === 'Market not found') {
+        res
+          .status(HttpStatusCode.NOT_FOUND)
+          .json({ error: 'Market ID not found' });
+        return;
+      }
+
       console.error('Error in marketController.getLiquidityById:', error);
       res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)

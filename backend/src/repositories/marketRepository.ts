@@ -7,8 +7,8 @@ export interface TvlResult extends RowDataPacket {
 }
 
 interface MarketMetrics {
-  totalSupply: string;
-  totalBorrow: string;
+  totalSupply: string | null;
+  totalBorrow: string | null;
 }
 
 /**
@@ -26,7 +26,7 @@ export const marketRepository = {
     chainId?: string,
     name?: string,
     id?: string,
-  ): Promise<string> => {
+  ): Promise<string | null> => {
     let query = 'SELECT SUM(total_supply_cents) as marketTvl FROM market';
     const params: string[] = [];
     const conditions: string[] = [];
@@ -52,8 +52,8 @@ export const marketRepository = {
     // Execute the query
     const [rows] = await pool.query<TvlResult[]>(query, params);
 
-    // Process the result: ensure a string is returned even if the result is null
-    return rows[0]?.marketTvl ?? '0';
+    // Process the result
+    return rows[0]?.marketTvl ?? null;
   },
 
   /**
@@ -68,7 +68,7 @@ export const marketRepository = {
     chainId?: string,
     name?: string,
     id?: string,
-  ): Promise<MarketMetrics> => {
+  ): Promise<MarketMetrics | null> => {
     let query = `
       SELECT 
         SUM(total_supply_cents) as totalSupply, 
@@ -98,10 +98,15 @@ export const marketRepository = {
 
     const [rows] = await pool.query<RowDataPacket[]>(query, params);
 
-    // Default to '0' if no records found to avoid BigInt errors
+    const result = rows[0];
+
+    if (!result || result.totalSupply === null) {
+      return null;
+    }
+
     return {
-      totalSupply: rows[0]?.totalSupply ?? '0',
-      totalBorrow: rows[0]?.totalBorrow ?? '0',
+      totalSupply: result.totalSupply,
+      totalBorrow: result.totalBorrow,
     };
   },
 };

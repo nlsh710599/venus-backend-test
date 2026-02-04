@@ -17,7 +17,16 @@ export const marketService = {
     name?: string,
     id?: string,
   ): Promise<string> => {
-    return await marketRepository.getTvl(chainId, name, id);
+    const result = await marketRepository.getTvl(chainId, name, id);
+
+    if (result === null) {
+      if (id) {
+        throw new Error('Market not found');
+      }
+      return '0';
+    }
+
+    return result;
   },
 
   /**
@@ -35,12 +44,19 @@ export const marketService = {
     // 1. Fetch raw metrics (supply and borrow) from repository
     const metrics = await marketRepository.getMetrics(chainId, name, id);
 
-    // 2. Perform calculation using BigInt for safety
-    // Note: The repository guarantees these values are strings (default '0')
-    const supply = BigInt(metrics.totalSupply);
-    const borrow = BigInt(metrics.totalBorrow);
+    if (!metrics) {
+      if (id) {
+        throw new Error('Market not found');
+      }
+      return '0';
+    }
 
-    // 3. Liquidity = Supply - Borrow
+    // 3. Perform calculation using BigInt for safety
+    // Note: The repository guarantees these values are strings (default '0')
+    const supply = BigInt(metrics.totalSupply!);
+    const borrow = BigInt(metrics.totalBorrow!);
+
+    // 4. Liquidity = Supply - Borrow
     // Convert back to string to preserve precision
     return (supply - borrow).toString();
   },

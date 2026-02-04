@@ -56,9 +56,7 @@ const CommonQueryParams = z.object({
 
 // Path Parameters (for ID queries)
 const IdPathParam = z.object({
-  id: z
-    .string()
-    .openapi({ description: 'The market ID', example: 'compound-v3-usdc' }),
+  id: z.string().openapi({ description: 'The market ID', example: '1' }),
 });
 
 // ==========================================
