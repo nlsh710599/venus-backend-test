@@ -10,30 +10,25 @@ import {
 } from '../schemas/market.schema';
 
 /**
- * Controller: Handles HTTP requests for Market endpoints.
+ * Handles HTTP requests for Market endpoints.
  */
 export const marketController = {
   /**
-   * GET /tvl
-   * Retrieves the Total Value Locked.
-   * Validates the request parameters before calling the service.
-   * Supports filtering by 'chain_id' and 'name'.
+   * Retrieves the Total Value Locked (TVL).
+   * Supports optional filtering by chain ID and token name.
    */
   getTvl: async (
     req: Request<{}, TvlResponse | ErrorResponse, {}, MarketQueryParams>,
     res: Response<TvlResponse | ErrorResponse>,
   ): Promise<void> => {
     try {
-      // Extract query parameters
       const { chain_id, name } = req.query;
 
-      // Call Service Layer with both filters
       const marketTvl = await marketService.getTvl(
         chain_id as string,
         name as string,
       );
 
-      // Send JSON Response
       res.status(HttpStatusCode.OK).json({ marketTvl });
     } catch (error) {
       console.error('Error in marketController.getTvl:', error);
@@ -44,25 +39,21 @@ export const marketController = {
   },
 
   /**
-   * GET /liquidity
    * Retrieves the aggregated Liquidity (Supply - Borrow).
-   * Supports filtering by 'chain_id' and 'name'.
+   * Supports optional filtering by chain ID and token name.
    */
   getLiquidity: async (
     req: Request<{}, LiquidityResponse | ErrorResponse, {}, MarketQueryParams>,
     res: Response<LiquidityResponse | ErrorResponse>,
   ): Promise<void> => {
     try {
-      // Extract query parameters
       const { chain_id, name } = req.query;
 
-      // Call Service Layer with both filters
       const marketLiquidity = await marketService.getLiquidity(
         chain_id as string,
         name as string,
       );
 
-      // Send JSON Response
       res.status(HttpStatusCode.OK).json({ marketLiquidity });
     } catch (error) {
       console.error('Error in marketController.getLiquidity:', error);
@@ -73,7 +64,6 @@ export const marketController = {
   },
 
   /**
-   * GET /:id/tvl
    * Retrieves TVL for a specific market ID.
    */
   getTvlById: async (
@@ -102,7 +92,6 @@ export const marketController = {
   },
 
   /**
-   * GET /:id/liquidity
    * Retrieves Liquidity for a specific market ID.
    */
   getLiquidityById: async (

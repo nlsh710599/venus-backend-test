@@ -9,7 +9,6 @@ jest.mock('../config/db', () => ({
   },
 }));
 
-// Mock Repository
 jest.mock('../repositories/marketRepository');
 
 describe('marketService', () => {
@@ -33,7 +32,7 @@ describe('marketService', () => {
 
     it('should return "0" when no ID is provided and result is null', async () => {
       (marketRepository.getTvl as jest.Mock).mockResolvedValue(null);
-      const result = await marketService.getTvl('1'); // List query
+      const result = await marketService.getTvl('1');
       expect(result).toBe('0');
     });
   });
@@ -55,7 +54,8 @@ describe('marketService', () => {
     });
 
     it('should handle large numbers correctly (BigInt)', async () => {
-      const supply = '900719925474099100'; // > MAX_SAFE_INTEGER
+      // MAX_SAFE_INTEGER
+      const supply = '900719925474099100';
       const borrow = '100';
       const expected = '900719925474099000';
 

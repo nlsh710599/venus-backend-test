@@ -1,7 +1,6 @@
 import { marketRepository } from '../repositories/marketRepository';
 import pool from '../config/db';
 
-// Mock mysql2 pool
 jest.mock('../config/db', () => ({
   query: jest.fn(),
 }));

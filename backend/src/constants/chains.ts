@@ -1,7 +1,7 @@
 /**
- * Chain IDs supported by the application.
- * 1: Ethereum Mainnet
- * 56: BNB Smart Chain (BSC) Mainnet
+ * Supported Blockchain Network IDs.
+ * - 1: Ethereum Mainnet
+ * - 56: BNB Smart Chain (BSC)
  */
 export const ChainIds = {
   ETHEREUM: '1',
@@ -9,7 +9,9 @@ export const ChainIds = {
 } as const;
 
 /**
- * Array of supported chain IDs for validation purposes.
- * We cast it to string[] to allow includes() to check against generic strings.
+ * Allowlist of supported chain IDs.
+ *
+ * Cast to string[] to facilitate validation against query parameters
+ * (which are typically generic strings).
  */
 export const SUPPORTED_CHAINS = Object.values(ChainIds) as string[];

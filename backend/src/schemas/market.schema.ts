@@ -5,10 +5,8 @@ import {
 } from '@asteasolutions/zod-to-openapi';
 import { SUPPORTED_CHAINS } from '../constants/chains';
 
-// 1. Enable OpenAPI extension
 extendZodWithOpenApi(z);
 
-// 2. Create Registry
 export const registry = new OpenAPIRegistry();
 
 // ==========================================
@@ -33,12 +31,10 @@ const ErrorSchema = z.object({
   error: z.string().openapi({ example: 'Invalid parameters' }),
 });
 
-// Register Schemas to Components (Visible in Swagger UI under "Schemas")
 registry.register('TvlResponse', TvlResponseSchema);
 registry.register('LiquidityResponse', LiquidityResponseSchema);
 registry.register('Error', ErrorSchema);
 
-// Export TypeScript types for Controller
 export type TvlResponse = z.infer<typeof TvlResponseSchema>;
 export type LiquidityResponse = z.infer<typeof LiquidityResponseSchema>;
 export type ErrorResponse = z.infer<typeof ErrorSchema>;
@@ -47,7 +43,6 @@ export type ErrorResponse = z.infer<typeof ErrorSchema>;
 // Parameters
 // ==========================================
 
-// Query Parameters (for list queries)
 const CommonQueryParams = z.object({
   chain_id: z
     .enum(SUPPORTED_CHAINS)
@@ -56,7 +51,6 @@ const CommonQueryParams = z.object({
   name: z.string().optional().openapi({ description: 'Filter by Token Name' }),
 });
 
-// Path Parameters (for ID queries)
 const IdPathParam = z.object({
   id: z.string().openapi({ description: 'The market ID', example: '1' }),
 });
@@ -68,7 +62,6 @@ export type MarketIdParams = z.infer<typeof IdPathParam>;
 // Routes
 // ==========================================
 
-// 1. GET /market/tvl
 registry.registerPath({
   method: 'get',
   path: '/market/tvl',
@@ -90,7 +83,6 @@ registry.registerPath({
   },
 });
 
-// 2. GET /market/liquidity
 registry.registerPath({
   method: 'get',
   path: '/market/liquidity',
@@ -108,14 +100,13 @@ registry.registerPath({
   },
 });
 
-// 3. GET /market/{id}/tvl
 registry.registerPath({
   method: 'get',
-  path: '/market/{id}/tvl', // Note: Use {id} syntax for path parameters
+  path: '/market/{id}/tvl',
   tags: ['Market'],
   summary: 'Retrieve TVL for a specific market ID',
   request: {
-    params: IdPathParam, // Define Path Parameters here
+    params: IdPathParam,
   },
   responses: {
     200: {
@@ -130,7 +121,6 @@ registry.registerPath({
   },
 });
 
-// 4. GET /market/{id}/liquidity
 registry.registerPath({
   method: 'get',
   path: '/market/{id}/liquidity',

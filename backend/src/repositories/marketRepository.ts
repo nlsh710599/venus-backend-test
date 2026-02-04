@@ -1,7 +1,6 @@
 import { RowDataPacket } from 'mysql2/promise';
 import pool from '../config/db';
 
-// Define the interface for the database query result
 export interface TvlResult extends RowDataPacket {
   marketTvl: string | null;
 }
@@ -12,15 +11,16 @@ interface MarketMetrics {
 }
 
 /**
- * Repository: Handles all direct database interactions for the Market entity.
+ * Handles direct database interactions for the Market entity.
  */
 export const marketRepository = {
   /**
-   * Retrieves the Total Value Locked (TVL) from the market table.
-   * @param chainId - Optional chain ID to filter the results.
-   * @param name - Optional name to filter the results.
-   * @param id - Optional id to filter the results.
-   * @returns A promise that resolves to the total TVL as a string.
+   * Retrieves the aggregated Total Value Locked (TVL).
+   *
+   * @param chainId - Optional chain ID filter.
+   * @param name - Optional token name filter.
+   * @param id - Optional market ID filter.
+   * @returns The total TVL as a string, or null if no data is found.
    */
   getTvl: async (
     chainId?: string,
@@ -31,7 +31,6 @@ export const marketRepository = {
     const params: string[] = [];
     const conditions: string[] = [];
 
-    // Dynamic WHERE clause construction
     if (chainId) {
       conditions.push('chain_id = ?');
       params.push(chainId);
@@ -49,20 +48,19 @@ export const marketRepository = {
       query += ' WHERE ' + conditions.join(' AND ');
     }
 
-    // Execute the query
     const [rows] = await pool.query<TvlResult[]>(query, params);
 
-    // Process the result
     return rows[0]?.marketTvl ?? null;
   },
 
   /**
-   * Retrieves both Total Supply and Total Borrow aggregated values.
-   * This allows the service layer to calculate Liquidity (Supply - Borrow).
-   * @param chainId - Optional chain ID to filter by.
-   * @param name - Optional name to filter the results.
-   * @param id - Optional id to filter the results.
-   * @returns An object containing totalSupply and totalBorrow strings.
+   * Retrieves aggregated Total Supply and Total Borrow metrics.
+   * Typically used by the service layer to calculate Liquidity.
+   *
+   * @param chainId - Optional chain ID filter.
+   * @param name - Optional token name filter.
+   * @param id - Optional market ID filter.
+   * @returns An object containing totalSupply and totalBorrow, or null if no data found.
    */
   getMetrics: async (
     chainId?: string,
@@ -78,7 +76,6 @@ export const marketRepository = {
     const params: string[] = [];
     const conditions: string[] = [];
 
-    // Dynamic WHERE clause construction
     if (chainId) {
       conditions.push('chain_id = ?');
       params.push(chainId);
@@ -97,7 +94,6 @@ export const marketRepository = {
     }
 
     const [rows] = await pool.query<RowDataPacket[]>(query, params);
-
     const result = rows[0];
 
     if (!result || result.totalSupply === null) {

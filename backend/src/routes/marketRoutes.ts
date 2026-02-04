@@ -7,11 +7,12 @@ import {
 
 const router = Router();
 
+// Middleware to ensure specific query parameters are treated as single strings
 const normalizeMarketParams = ensureSingleQuery(['chain_id', 'name', 'id']);
 
 /**
- * GET /tvl
- * Route to fetch the Total Value Locked.
+ * Retrieves Total Value Locked (TVL).
+ * Supports filtering by 'chain_id' and 'name'.
  */
 router.get(
   '/tvl',
@@ -21,8 +22,8 @@ router.get(
 );
 
 /**
- * GET /liquidity
- * Route to fetch the aggregated Liquidity (Supply - Borrow).
+ * Retrieves aggregated Liquidity (Supply - Borrow).
+ * Supports filtering by 'chain_id' and 'name'.
  */
 router.get(
   '/liquidity',
@@ -32,14 +33,12 @@ router.get(
 );
 
 /**
- * GET /:id/tvl
- * Route to fetch the Total Value Locked by id.
+ * Retrieves Total Value Locked (TVL) for a specific market ID.
  */
 router.get('/:id/tvl', normalizeMarketParams, marketController.getTvlById);
 
 /**
- * GET /:id/liquidity
- * Route to fetch the aggregated Liquidity (Supply - Borrow) by id.
+ * Retrieves aggregated Liquidity for a specific market ID.
  */
 router.get(
   '/:id/liquidity',

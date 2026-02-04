@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
 dotenv.config();
 
 interface AppConfig {
@@ -14,7 +13,6 @@ interface AppConfig {
   };
 }
 
-// Validation helper: throws error if a variable is missing
 const getEnvVar = (name: string, fallback?: string): string => {
   const value = process.env[name] || fallback;
   if (value === undefined) {
@@ -23,7 +21,6 @@ const getEnvVar = (name: string, fallback?: string): string => {
   return value;
 };
 
-// Export the validated configuration object
 export const config: AppConfig = {
   port: parseInt(process.env.PORT || '8181', 10),
   db: {

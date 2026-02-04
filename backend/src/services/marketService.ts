@@ -2,15 +2,16 @@ import { marketRepository } from '../repositories/marketRepository';
 import { MarketQueryParams } from '../schemas/market.schema';
 
 /**
- * Service: Handles business logic for Market operations.
- * Acts as an intermediary between the Controller and the Repository.
+ * Handles business logic for Market operations, acting as the intermediary
+ * between Controllers and Repositories.
  */
 export const marketService = {
   /**
-   * Gets the Total Value Locked (TVL).
-   * Future business logic (e.g., calculation, aggregation) can be added here.
+   * Retrieves the Total Value Locked (TVL).
+   *
    * @param chainId - Optional chain ID filter.
    * @param name - Optional name filter.
+   * @param id - Optional market ID.
    * @returns The TVL as a string.
    */
   getTvl: async (
@@ -31,18 +32,18 @@ export const marketService = {
   },
 
   /**
-   * Calculates the Liquidity (Total Supply - Total Borrow).
-   * Performs BigInt arithmetic to ensure precision with financial data.
+   * Calculates the aggregated Liquidity (Total Supply - Total Borrow).
+   *
    * @param chainId - Optional chain ID filter.
    * @param name - Optional name filter.
-   * @returns The liquidity amount as a string.
+   * @param id - Optional market ID.
+   * @returns The calculated liquidity amount as a string.
    */
   getLiquidity: async (
     chainId?: MarketQueryParams['chain_id'],
     name?: MarketQueryParams['name'],
     id?: string,
   ): Promise<string> => {
-    // 1. Fetch raw metrics (supply and borrow) from repository
     const metrics = await marketRepository.getMetrics(chainId, name, id);
 
     if (!metrics) {
@@ -52,13 +53,11 @@ export const marketService = {
       return '0';
     }
 
-    // 3. Perform calculation using BigInt for safety
-    // Note: The repository guarantees these values are strings (default '0')
+    // Use BigInt for financial calculations to prevent precision loss.
+    // The repository guarantees these values are strings (defaulting to '0').
     const supply = BigInt(metrics.totalSupply!);
     const borrow = BigInt(metrics.totalBorrow!);
 
-    // 4. Liquidity = Supply - Borrow
-    // Convert back to string to preserve precision
     return (supply - borrow).toString();
   },
 };

@@ -1,7 +1,6 @@
 import { createPool, Pool } from 'mysql2/promise';
 import { config } from './env';
 
-// Create the connection pool using the validated config
 const pool: Pool = createPool({
   host: config.db.host,
   user: config.db.user,
