@@ -21,6 +21,12 @@ describe('E2E Market API Tests (Real DB)', () => {
       expect(response.body).toEqual({ marketTvl: '1000' });
     });
 
+    it('should return 400 for invalid chain_id', async () => {
+      const response = await request(app).get('/market/tvl?chain_id=invalid');
+      expect(response.status).toBe(HttpStatusCode.BAD_REQUEST);
+      expect(response.body).toHaveProperty('error');
+    });
+
     it('should filter TVL by name', async () => {
       const response = await request(app).get('/market/tvl?name=Token A');
       expect(response.status).toBe(HttpStatusCode.OK);

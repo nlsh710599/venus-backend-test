@@ -36,6 +36,16 @@ describe('Market Routes Integration Tests', () => {
       );
     });
 
+    it('should handle Big Numbers correctly (TVL)', async () => {
+      const bigValue = '900719925474099999999';
+      (marketRepository.getTvl as jest.Mock).mockResolvedValue(bigValue);
+
+      const response = await request(app).get('/market/tvl');
+
+      expect(response.status).toBe(HttpStatusCode.OK);
+      expect(response.body).toEqual({ marketTvl: bigValue });
+    });
+
     it('should return 400 for invalid chain_id (Middleware check)', async () => {
       const response = await request(app).get('/market/tvl?chain_id=invalid');
 
@@ -54,7 +64,23 @@ describe('Market Routes Integration Tests', () => {
       const response = await request(app).get('/market/liquidity');
 
       expect(response.status).toBe(HttpStatusCode.OK);
-      expect(response.body).toEqual({ marketLiquidity: '150' }); // 200 - 50 = 150
+      expect(response.body).toEqual({ marketLiquidity: '150' });
+    });
+
+    it('should handle Big Numbers correctly (Liquidity Calculation)', async () => {
+      const supply = '10000000000000000000';
+      const borrow = '500';
+      const expected = '9999999999999999500';
+
+      (marketRepository.getMetrics as jest.Mock).mockResolvedValue({
+        totalSupply: supply,
+        totalBorrow: borrow,
+      });
+
+      const response = await request(app).get('/market/liquidity');
+
+      expect(response.status).toBe(HttpStatusCode.OK);
+      expect(response.body).toEqual({ marketLiquidity: expected });
     });
 
     it('should return 400 for invalid chain_id (Middleware check)', async () => {
@@ -102,7 +128,7 @@ describe('Market Routes Integration Tests', () => {
       const response = await request(app).get('/market/123/liquidity');
 
       expect(response.status).toBe(HttpStatusCode.OK);
-      expect(response.body).toEqual({ marketLiquidity: '600' }); // 1000 - 400 = 600
+      expect(response.body).toEqual({ marketLiquidity: '600' });
       expect(marketRepository.getMetrics).toHaveBeenCalledWith(
         undefined,
         undefined,

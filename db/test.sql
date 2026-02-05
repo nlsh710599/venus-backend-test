@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS market (
 );
 
 INSERT INTO market (id, name, chain_id, total_supply_cents, total_borrow_cents) 
-VALUES (1, 'Token A', '1', 1000, 400),
-VALUES (2, 'Token B', '56', 5000, 1000),
-VALUES (3, 'Token Whale', '56', 10000000000000000, 5000000000000000);
+VALUES 
+  (1, 'Token A', '1', 1000, 400),
+  (2, 'Token B', '56', 5000, 1000),
+  (3, 'Token Whale', '56', 10000000000000000, 5000000000000000);
