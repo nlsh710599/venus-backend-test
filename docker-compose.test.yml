@@ -35,7 +35,7 @@ services:
     depends_on:
       test-db:
         condition: service_healthy
-    command: npx jest src/tests/market.e2e.test.ts --runInBand --forceExit
+    command: npx jest --config jest.e2e.config.js src/tests/market.e2e.test.ts --runInBand --forceExit
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
