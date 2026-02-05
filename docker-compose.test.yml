@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  test-db:
+    image: mysql:8.4
+    container_name: mysql_test_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
+    ports:
+      - "3307:3306" 
+    volumes:
+      - ./db/test.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+      interval: 5s
+
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend_e2e_runner
+    environment:
+      NODE_ENV: test
+      DB_HOST: test-db      
+      DB_PORT: 3306         
+      DB_USER: test_user
+      DB_PASSWORD: test_password
+      DB_NAME: test_db
+      PORT: 8181
+    depends_on:
+      test-db:
+        condition: service_healthy
+    command: npx jest src/tests/market.e2e.test.ts --runInBand --forceExit
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules

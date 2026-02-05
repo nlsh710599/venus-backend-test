@@ -56,13 +56,64 @@ describe('Market Routes Integration Tests', () => {
       expect(response.status).toBe(HttpStatusCode.OK);
       expect(response.body).toEqual({ marketLiquidity: '150' }); // 200 - 50 = 150
     });
+
+    it('should return 400 for invalid chain_id (Middleware check)', async () => {
+      const response = await request(app).get(
+        '/market/liquidity?chain_id=invalid',
+      );
+
+      expect(response.status).toBe(HttpStatusCode.BAD_REQUEST);
+      expect(marketRepository.getMetrics).not.toHaveBeenCalled();
+    });
   });
 
   describe('GET /market/:id/tvl', () => {
+    it('should return 200 and TVL data for specific ID', async () => {
+      (marketRepository.getTvl as jest.Mock).mockResolvedValue('5000');
+
+      const response = await request(app).get('/market/123/tvl');
+
+      expect(response.status).toBe(HttpStatusCode.OK);
+      expect(response.body).toEqual({ marketTvl: '5000' });
+      expect(marketRepository.getTvl).toHaveBeenCalledWith(
+        undefined,
+        undefined,
+        '123',
+      );
+    });
+
     it('should return 404 if ID not found (Error Handling check)', async () => {
       (marketRepository.getTvl as jest.Mock).mockResolvedValue(null);
 
       const response = await request(app).get('/market/999/tvl');
+
+      expect(response.status).toBe(HttpStatusCode.NOT_FOUND);
+      expect(response.body).toEqual({ error: 'Market ID not found' });
+    });
+  });
+
+  describe('GET /market/:id/liquidity', () => {
+    it('should return 200 and Liquidity data for specific ID', async () => {
+      (marketRepository.getMetrics as jest.Mock).mockResolvedValue({
+        totalSupply: '1000',
+        totalBorrow: '400',
+      });
+
+      const response = await request(app).get('/market/123/liquidity');
+
+      expect(response.status).toBe(HttpStatusCode.OK);
+      expect(response.body).toEqual({ marketLiquidity: '600' }); // 1000 - 400 = 600
+      expect(marketRepository.getMetrics).toHaveBeenCalledWith(
+        undefined,
+        undefined,
+        '123',
+      );
+    });
+
+    it('should return 404 if ID not found', async () => {
+      (marketRepository.getMetrics as jest.Mock).mockResolvedValue(null);
+
+      const response = await request(app).get('/market/999/liquidity');
 
       expect(response.status).toBe(HttpStatusCode.NOT_FOUND);
       expect(response.body).toEqual({ error: 'Market ID not found' });
